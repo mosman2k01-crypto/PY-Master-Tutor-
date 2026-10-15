@@ -23,11 +23,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-          cache: 'gradle'
 
-      - name: Configure Android SDK Licenses & Env
+      - name: Accept Android SDK Licenses
         run: |
-          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
           yes | sdkmanager --licenses || true
 
       - name: Install Node Dependencies
@@ -36,11 +34,11 @@ jobs:
       - name: Build Web App
         run: npm run build
 
-      - name: Initialize & Sync Capacitor Android
+      - name: Add Android Platform & Sync Capacitor
         run: |
           git config --global user.email "ci@github.com"
           git config --global user.name "GitHub CI"
-          npx cap add android || true
+          npx cap add android
           npx cap sync android
 
       - name: Build Debug APK with Gradle
